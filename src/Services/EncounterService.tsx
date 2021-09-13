@@ -122,8 +122,12 @@ export namespace EncounterService {
         participant.state = States.normal;
 
         encounter.participants.splice(participantIndex, 1);
-        encounter.participants.splice(encounter.currentParticipant, 0, participant);
-        if (oldState === States.readied) {
+        const targetIndex = participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
+        encounter.participants.splice(targetIndex, 0, participant);
+
+        if (oldState === States.delayed && participantIndex < encounter.currentParticipant) {
+            encounter.currentParticipant--;
+        } else if (oldState === States.readied && participantIndex > encounter.currentParticipant) {
             encounter.currentParticipant++;
         }
 
