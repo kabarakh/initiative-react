@@ -4,6 +4,13 @@ import {find, map} from "lodash";
 import {ListTypes, States} from "../../../DataTypes/Constants";
 import {EncounterService} from "../../../Services/EncounterService";
 import {NonNormalParticipants} from "./NonNormalParticipants";
+import {
+    faAngleDoubleRight,
+    faHandPointRight,
+    faStopCircle,
+    faUndo
+} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface Props {
     setMessageText(messageText: string): void
@@ -43,13 +50,13 @@ export function CombatParticipantList({participants, setMessageText, currentPart
 
     return (
         <div className="participant-list combat-list">
-            <button onClick={nextParticipant}>Next</button>
+            <button onClick={nextParticipant}><FontAwesomeIcon size="2x" icon={faAngleDoubleRight} /></button>
             {currentRound === 0 ? <button onClick={nextRound}>Skip surprise round</button>: null }
             <div className="round-count">{currentRound === 0 ? 'Surprise round' : `Round ${currentRound}`}</div>
             {participants.map((participant: Participant, index: number) => {
                 return <div className={`participant ${participant.state}`} key={participant.name}>
                     <div className="participant-name">
-                        {index === currentParticipant ? '=> ' : ''}{participant.name}
+                        {index === currentParticipant ? <FontAwesomeIcon icon={faHandPointRight} /> : ''}{participant.name}
                     </div>
                     <div className="participant-initiative">
                         {participant.initiative}
@@ -58,13 +65,13 @@ export function CombatParticipantList({participants, setMessageText, currentPart
                         {participant.state === States.normal ? <React.Fragment>
                             <button onClick={() => markParticipant(participant.name, States.readied)}>Ready</button>
                             <button onClick={() => markParticipant(participant.name, States.delayed)}>Delay</button>
-                        </React.Fragment> : <button onClick={() => markParticipant(participant.name, States.normal)}>Reset state</button>
+                        </React.Fragment> : <button onClick={() => markParticipant(participant.name, States.normal)}><FontAwesomeIcon icon={faUndo} /></button>
                         }
                     </div>
                 </div>
             })}
             <NonNormalParticipants participants={participants} />
-            <button onClick={endEncounter}>End Encounter</button>
+            <button onClick={endEncounter}><FontAwesomeIcon icon={faStopCircle} /></button>
 
         </div>
     )

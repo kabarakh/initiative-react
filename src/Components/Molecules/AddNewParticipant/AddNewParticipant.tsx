@@ -1,4 +1,8 @@
 import React, {FormEvent, useState} from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPlusSquare} from "@fortawesome/free-solid-svg-icons";
+
+
 
 interface Props {
     onSubmitHandler(name: string): boolean;
@@ -37,7 +41,7 @@ export function AddNewParticipant({onSubmitHandler, setMessageText}: Props) {
         <div className="add-participant">
             <form onSubmit={submitHandler} className={className}>
                 <input type="text" value={name} onInput={updateName}/>
-                <input type="submit" value="+"/>
+                <button type="submit"><FontAwesomeIcon icon={faPlusSquare} /></button>
             </form>
         </div>
     );

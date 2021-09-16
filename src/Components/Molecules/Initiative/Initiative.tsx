@@ -1,4 +1,6 @@
 import React, {FormEvent, useState} from 'react';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPenSquare, faSave} from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     initiative: number;
@@ -31,13 +33,10 @@ export function Initiative({initiative, onSaveInitiative}: Props) {
                 editMode ?
                     <form onSubmit={saveInitiative}>
                         <input type="text" value={currentInitiative} onInput={updateInitiative}/>
-                        <input type="submit" value="Save"/>
+                        <button type="submit"><FontAwesomeIcon icon={faSave} /></button>
                     </form> :
                     <div>{currentInitiative}
-                        <button onClick={() => {
-                            setEditMode(true)
-                        }}>Set initiative
-                        </button>
+                        <button onClick={() => {setEditMode(true)}}><FontAwesomeIcon icon={faPenSquare} /></button>
                     </div>
             }
         </div>

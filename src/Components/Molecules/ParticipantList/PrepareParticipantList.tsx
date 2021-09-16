@@ -5,6 +5,8 @@ import {Initiative} from "../Initiative/Initiative";
 import {AddNewParticipant} from "../AddNewParticipant/AddNewParticipant";
 import {ListTypes} from "../../../DataTypes/Constants";
 import {EncounterService} from "../../../Services/EncounterService";
+import {faPlayCircle, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface Props {
     setMessageText(messageText: string): void
@@ -70,12 +72,12 @@ export function PrepareParticipantList({setMessageText, participants}: Props) {
                         }}/>
                     </div>
                     <div className="participant-actions">
-                        <button onClick={() => deleteParticipant(participant.name)}>Remove</button>
+                        <button onClick={() => deleteParticipant(participant.name)}><FontAwesomeIcon icon={faTrashAlt} /></button>
                     </div>
                 </div>
             })}
             <AddNewParticipant setMessageText={setMessageText} onSubmitHandler={EncounterService.addParticipant}/>
-            <button onClick={startEncounter}>Start Encounter</button>
+            <button onClick={startEncounter}><FontAwesomeIcon icon={faPlayCircle} /></button>
         </div>
     )
 }
