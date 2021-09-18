@@ -5,7 +5,8 @@ import {PrepareParticipantList} from "./Components/Molecules/ParticipantList/Pre
 import {Encounter} from "./DataTypes/Interfaces";
 import {EncounterService} from "./Services/EncounterService";
 
-import "./App.css";
+import "./GlobalStyles/GlobalStyles.scss";
+import "./App.scss";
 
 interface Props {
 }
