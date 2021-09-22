@@ -1,4 +1,3 @@
-import React from 'react';
 import {Participant} from "../../../DataTypes/Interfaces";
 import {countBy, filter, map, orderBy} from "lodash";
 import {Initiative} from "../Initiative/Initiative";

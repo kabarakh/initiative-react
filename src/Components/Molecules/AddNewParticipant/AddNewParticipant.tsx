@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from 'react';
+import { FormEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlusSquare} from "@fortawesome/free-solid-svg-icons";
 

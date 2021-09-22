@@ -1,4 +1,3 @@
-import React from 'react';
 import {Participant} from "../../../DataTypes/Interfaces";
 import {filter, map} from "lodash";
 import {States} from "../../../DataTypes/Constants";

@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import {ListTypes} from "./DataTypes/Constants";
 import {CombatParticipantList} from "./Components/Molecules/ParticipantList/CombatParticipantList";
 import {PrepareParticipantList} from "./Components/Molecules/ParticipantList/PrepareParticipantList";
@@ -16,7 +16,7 @@ interface State {
     messageText: string;
 }
 
-export default class App extends React.Component<Props, State> {
+export default class App extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
