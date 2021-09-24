@@ -1,16 +1,23 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, Fragment, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenSquare, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faMinusCircle, faPenSquare, faPlusCircle, faSave } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   initiative: number;
+  isSameWithSomeoneElse: boolean;
 
   onSaveInitiative(initiative: number): void;
 }
 
-export function Initiative({ initiative, onSaveInitiative }: Props) {
+export function Initiative({ initiative, isSameWithSomeoneElse, onSaveInitiative }: Props) {
   const [currentInitiative, setCurrentInitiative] = useState(initiative);
   const [editMode, setEditMode] = useState(false);
+
+  const editForTiebreaker = (addition: number) => {
+    const newInitiative = Number((currentInitiative + addition / 10).toFixed(1));
+    setCurrentInitiative(newInitiative);
+    onSaveInitiative(newInitiative);
+  };
 
   const updateInitiative = (inputEvent: FormEvent<HTMLInputElement>) => {
     inputEvent.preventDefault();
@@ -37,7 +44,7 @@ export function Initiative({ initiative, onSaveInitiative }: Props) {
           </button>
         </form>
       ) : (
-        <div>
+        <div className={isSameWithSomeoneElse ? 'same-with-someone' : ''}>
           {currentInitiative}
           <button
             onClick={() => {
@@ -46,6 +53,24 @@ export function Initiative({ initiative, onSaveInitiative }: Props) {
           >
             <FontAwesomeIcon icon={faPenSquare} />
           </button>
+          {isSameWithSomeoneElse ? (
+            <Fragment>
+              <button
+                onClick={() => {
+                  editForTiebreaker(1);
+                }}
+              >
+                <FontAwesomeIcon icon={faPlusCircle} />
+              </button>
+              <button
+                onClick={() => {
+                  editForTiebreaker(-1);
+                }}
+              >
+                <FontAwesomeIcon icon={faMinusCircle} />
+              </button>
+            </Fragment>
+          ) : null}
         </div>
       )}
     </div>
