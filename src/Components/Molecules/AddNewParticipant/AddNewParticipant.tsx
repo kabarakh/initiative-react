@@ -1,16 +1,16 @@
 import { FormEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { EncounterService } from '../../../Services/EncounterService';
 
 interface Props {
-  onSubmitHandler(name: string): boolean;
-
   setMessageText(message: string): void;
 }
 
-export function AddNewParticipant({ onSubmitHandler, setMessageText }: Props) {
+export function AddNewParticipant({ setMessageText }: Props) {
   const [name, setName] = useState('');
   const [className, setClassName] = useState('');
+  const [isPlayer, setIsPlayer] = useState(false);
 
   const updateName = (eventHandler: FormEvent<HTMLInputElement>) => {
     eventHandler.preventDefault();
@@ -19,12 +19,17 @@ export function AddNewParticipant({ onSubmitHandler, setMessageText }: Props) {
     setName(eventHandler.currentTarget.value);
   };
 
+  const updateType = () => {
+    setIsPlayer(!isPlayer);
+  };
+
   const submitHandler = (eventHandler: FormEvent<HTMLFormElement>) => {
     eventHandler.preventDefault();
     setClassName('');
+    setIsPlayer(false);
 
     if (name !== '') {
-      const result = onSubmitHandler(name);
+      const result = EncounterService.addParticipant(name, isPlayer);
       if (result === true) {
         setName('');
       } else {
@@ -38,6 +43,10 @@ export function AddNewParticipant({ onSubmitHandler, setMessageText }: Props) {
     <div className="add-participant">
       <form onSubmit={submitHandler} className={className}>
         <input type="text" value={name} onInput={updateName} />
+        <label>
+          Player character
+          <input type="checkbox" value="1" checked={isPlayer} onChange={updateType} />
+        </label>
         <button type="submit">
           <FontAwesomeIcon icon={faPlusSquare} />
         </button>

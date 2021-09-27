@@ -1,9 +1,10 @@
-import { ListTypes, States } from './Constants';
+import { ListTypes, ParticipantTypes, States } from './Constants';
 
 export interface Participant {
   name: string;
   state: States;
   initiative: number;
+  type: ParticipantTypes;
 }
 
 export interface Encounter {

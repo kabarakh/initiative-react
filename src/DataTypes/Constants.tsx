@@ -8,3 +8,8 @@ export enum ListTypes {
   prepare = 'prepare',
   combat = 'combat',
 }
+
+export enum ParticipantTypes {
+  player = 'player',
+  npc = 'npc',
+}

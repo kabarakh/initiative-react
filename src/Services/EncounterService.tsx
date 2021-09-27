@@ -1,7 +1,7 @@
 import { Encounter, Participant } from '../DataTypes/Interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { find, findIndex, map } from 'lodash';
-import { ListTypes, States } from '../DataTypes/Constants';
+import { ListTypes, ParticipantTypes, States } from '../DataTypes/Constants';
 
 export namespace EncounterService {
   export const defaultEncounter: Encounter = {
@@ -61,7 +61,7 @@ export namespace EncounterService {
     refresh();
   }
 
-  export const addParticipant = (name: string): boolean => {
+  export const addParticipant = (name: string, isPlayer: boolean): boolean => {
     const foundElements = find(encounter.participants, (participant: Participant) => {
       return name.toLowerCase() === participant.name.toLowerCase();
     });
@@ -74,6 +74,7 @@ export namespace EncounterService {
       name: name,
       initiative: 0,
       state: States.normal,
+      type: isPlayer ? ParticipantTypes.player : ParticipantTypes.npc,
     };
 
     const newEncounter = { ...encounter };

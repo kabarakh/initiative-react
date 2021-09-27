@@ -90,7 +90,7 @@ export function PrepareParticipantList({ setMessageText, participants }: Props) 
           </div>
         );
       })}
-      <AddNewParticipant setMessageText={setMessageText} onSubmitHandler={EncounterService.addParticipant} />
+      <AddNewParticipant setMessageText={setMessageText} />
       <button onClick={startEncounter}>
         <FontAwesomeIcon icon={faPlayCircle} />
       </button>

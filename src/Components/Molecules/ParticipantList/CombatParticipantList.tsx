@@ -1,6 +1,6 @@
 import { Participant } from '../../../DataTypes/Interfaces';
-import { map } from 'lodash';
-import { ListTypes, States } from '../../../DataTypes/Constants';
+import { filter, map } from 'lodash';
+import { ListTypes, ParticipantTypes, States } from '../../../DataTypes/Constants';
 import { EncounterService } from '../../../Services/EncounterService';
 import { faAngleDoubleRight, faHandPointRight, faStopCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,8 @@ interface Props {
 
 export function CombatParticipantList({ participants, setMessageText, currentParticipant, currentRound }: Props) {
   const endEncounter = (): void => {
-    const resetParticipants = map(participants, (participant: Participant) => {
+    let resetParticipants = filter(participants, { type: ParticipantTypes.player });
+    resetParticipants = map(resetParticipants, (participant: Participant) => {
       participant.initiative = 0;
       participant.state = States.normal;
       return participant;
