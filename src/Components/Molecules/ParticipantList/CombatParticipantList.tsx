@@ -1,11 +1,10 @@
-import { Fragment } from 'react';
 import { Participant } from '../../../DataTypes/Interfaces';
-import { find, map } from 'lodash';
+import { map } from 'lodash';
 import { ListTypes, States } from '../../../DataTypes/Constants';
 import { EncounterService } from '../../../Services/EncounterService';
-import { NonNormalParticipants } from './NonNormalParticipants';
-import { faAngleDoubleRight, faHandPointRight, faStopCircle, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleRight, faHandPointRight, faStopCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ParticipantState } from '../ParticipantState/ParticipantState';
 
 interface Props {
   setMessageText(messageText: string): void;
@@ -24,15 +23,6 @@ export function CombatParticipantList({ participants, setMessageText, currentPar
     });
     EncounterService.updateEncounterType(ListTypes.prepare);
     EncounterService.updateParticipants(resetParticipants);
-  };
-
-  const markParticipant = (name: string, state: States) => {
-    const participantToChange = find(participants, { name: name });
-
-    EncounterService.updateParticipant({
-      ...participantToChange,
-      state: state,
-    } as Participant);
   };
 
   const nextParticipant = () => {
@@ -59,21 +49,11 @@ export function CombatParticipantList({ participants, setMessageText, currentPar
             </div>
             <div className="participant-initiative">{participant.initiative}</div>
             <div className="participant-actions">
-              {participant.state === States.normal ? (
-                <Fragment>
-                  <button onClick={() => markParticipant(participant.name, States.readied)}>Ready</button>
-                  <button onClick={() => markParticipant(participant.name, States.delayed)}>Delay</button>
-                </Fragment>
-              ) : (
-                <button onClick={() => markParticipant(participant.name, States.normal)}>
-                  <FontAwesomeIcon icon={faUndo} />
-                </button>
-              )}
+              <ParticipantState index={index} participant={participant} currentParticipant={currentParticipant} />
             </div>
           </div>
         );
       })}
-      <NonNormalParticipants participants={participants} />
       <button onClick={endEncounter}>
         <FontAwesomeIcon icon={faStopCircle} />
       </button>

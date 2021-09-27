@@ -113,17 +113,17 @@ export namespace EncounterService {
     refresh();
   };
 
-  export const resolveNonNormalState = (name: string) => {
-    const participantIndex = findIndex(encounter.participants, { name: name });
+  export const resolveNonNormalState = (participant: Participant) => {
+    const participantIndex = findIndex(encounter.participants, { name: participant.name });
 
-    const participant = encounter.participants[participantIndex];
-    const oldState = participant.state;
-    participant.state = States.normal;
+    const participantToWorkWith = encounter.participants[participantIndex];
+    const oldState = participantToWorkWith.state;
+    participantToWorkWith.state = States.normal;
 
     encounter.participants.splice(participantIndex, 1);
     const targetIndex =
       participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
-    encounter.participants.splice(targetIndex, 0, participant);
+    encounter.participants.splice(targetIndex, 0, participantToWorkWith);
 
     if (oldState === States.delayed && participantIndex < encounter.currentParticipant) {
       encounter.currentParticipant--;
