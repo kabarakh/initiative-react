@@ -1,15 +1,15 @@
 export enum States {
-  normal = '',
-  readied = 'readied',
-  delayed = 'delayed',
+    normal = '',
+    readied = 'readied',
+    delayed = 'delayed',
 }
 
 export enum ListTypes {
-  prepare = 'prepare',
-  combat = 'combat',
+    prepare = 'prepare',
+    combat = 'combat',
 }
 
 export enum ParticipantTypes {
-  player = 'player',
-  npc = 'npc',
+    player = 'player',
+    npc = 'npc',
 }

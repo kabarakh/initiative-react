@@ -1,137 +1,137 @@
-import { Encounter, Participant } from '../DataTypes/Interfaces';
-import { BehaviorSubject } from 'rxjs';
-import { find, findIndex, map } from 'lodash';
-import { ListTypes, ParticipantTypes, States } from '../DataTypes/Constants';
+import {Encounter, Participant} from '../DataTypes/Interfaces';
+import {BehaviorSubject} from 'rxjs';
+import {find, findIndex, map} from 'lodash';
+import {ListTypes, ParticipantTypes, States} from '../DataTypes/Constants';
 
 export namespace EncounterService {
-  export const defaultEncounter: Encounter = {
-    participants: [],
-    state: ListTypes.prepare,
-    currentParticipant: 0,
-    currentRound: 0,
-  };
-
-  const storedEncounter = window.localStorage.getItem('encounter');
-  let encounter: Encounter;
-  if (storedEncounter) {
-    encounter = JSON.parse(storedEncounter) as Encounter;
-  } else {
-    encounter = defaultEncounter;
-  }
-  const encounterBehaviorSubject: BehaviorSubject<Encounter> = new BehaviorSubject<Encounter>(encounter);
-
-  export const subscribe = (callback: (encounter: Encounter) => void): Encounter => {
-    encounterBehaviorSubject.subscribe(callback);
-    return encounter;
-  };
-
-  export function refresh() {
-    window.localStorage.setItem('encounter', JSON.stringify(encounter));
-    encounterBehaviorSubject.next(encounter);
-  }
-
-  export const updateEncounterType = (newType: ListTypes) => {
-    encounter.state = newType;
-    refresh();
-  };
-
-  export const updateParticipant = (newParticipant: Participant): void => {
-    const newParticipants = map(encounter.participants, (participant: Participant) => {
-      if (participant.name === newParticipant.name) {
-        return newParticipant;
-      } else {
-        return participant;
-      }
-    });
-
-    encounter = {
-      ...encounter,
-      participants: newParticipants,
+    export const defaultEncounter: Encounter = {
+        participants: [],
+        state: ListTypes.prepare,
+        currentParticipant: 0,
+        currentRound: 0,
     };
 
-    refresh();
-  };
+    const storedEncounter = window.localStorage.getItem('encounter');
+    let encounter: Encounter;
+    if (storedEncounter) {
+        encounter = JSON.parse(storedEncounter) as Encounter;
+    } else {
+        encounter = defaultEncounter;
+    }
+    const encounterBehaviorSubject: BehaviorSubject<Encounter> = new BehaviorSubject<Encounter>(encounter);
 
-  export function updateParticipants(newParticipants: Participant[]) {
-    encounter = {
-      ...encounter,
-      participants: newParticipants,
+    export const subscribe = (callback: (encounter: Encounter) => void): Encounter => {
+        encounterBehaviorSubject.subscribe(callback);
+        return encounter;
     };
 
-    refresh();
-  }
-
-  export const addParticipant = (name: string, isPlayer: boolean): boolean => {
-    const foundElements = find(encounter.participants, (participant: Participant) => {
-      return name.toLowerCase() === participant.name.toLowerCase();
-    });
-
-    if (typeof foundElements !== 'undefined') {
-      return false;
+    export function refresh() {
+        window.localStorage.setItem('encounter', JSON.stringify(encounter));
+        encounterBehaviorSubject.next(encounter);
     }
 
-    const newParticipant: Participant = {
-      name: name,
-      initiative: 0,
-      state: States.normal,
-      type: isPlayer ? ParticipantTypes.player : ParticipantTypes.npc,
+    export const updateEncounterType = (newType: ListTypes) => {
+        encounter.state = newType;
+        refresh();
     };
 
-    const newEncounter = { ...encounter };
+    export const updateParticipant = (newParticipant: Participant): void => {
+        const newParticipants = map(encounter.participants, (participant: Participant) => {
+            if (participant.name === newParticipant.name) {
+                return newParticipant;
+            } else {
+                return participant;
+            }
+        });
 
-    newEncounter.participants.push(newParticipant);
-    refresh();
-    return true;
-  };
+        encounter = {
+            ...encounter,
+            participants: newParticipants,
+        };
 
-  export const nextRound = () => {
-    encounter = {
-      ...encounter,
-      currentRound: encounter.currentRound + 1,
+        refresh();
     };
-    refresh();
-  };
 
-  export const nextParticipant = () => {
-    let nextParticipant = encounter.currentParticipant + 1;
-    if (nextParticipant === encounter.participants.length) {
-      nextParticipant = 0;
-      nextRound();
-    }
-    encounter = {
-      ...encounter,
-      currentParticipant: nextParticipant,
-    };
-    refresh();
-  };
+    export function updateParticipants(newParticipants: Participant[]) {
+        encounter = {
+            ...encounter,
+            participants: newParticipants,
+        };
 
-  export const resetRound = () => {
-    encounter = {
-      ...encounter,
-      currentRound: 0,
-      currentParticipant: 0,
-    };
-    refresh();
-  };
-
-  export const resolveNonNormalState = (participant: Participant) => {
-    const participantIndex = findIndex(encounter.participants, { name: participant.name });
-
-    const participantToWorkWith = encounter.participants[participantIndex];
-    const oldState = participantToWorkWith.state;
-    participantToWorkWith.state = States.normal;
-
-    encounter.participants.splice(participantIndex, 1);
-    const targetIndex =
-      participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
-    encounter.participants.splice(targetIndex, 0, participantToWorkWith);
-
-    if (oldState === States.delayed && participantIndex < encounter.currentParticipant) {
-      encounter.currentParticipant--;
-    } else if (oldState === States.readied && participantIndex > encounter.currentParticipant) {
-      encounter.currentParticipant++;
+        refresh();
     }
 
-    refresh();
-  };
+    export const addParticipant = (name: string, isPlayer: boolean): boolean => {
+        const foundElements = find(encounter.participants, (participant: Participant) => {
+            return name.toLowerCase() === participant.name.toLowerCase();
+        });
+
+        if (typeof foundElements !== 'undefined') {
+            return false;
+        }
+
+        const newParticipant: Participant = {
+            name: name,
+            initiative: 0,
+            state: States.normal,
+            type: isPlayer ? ParticipantTypes.player : ParticipantTypes.npc,
+        };
+
+        const newEncounter = {...encounter};
+
+        newEncounter.participants.push(newParticipant);
+        refresh();
+        return true;
+    };
+
+    export const nextRound = () => {
+        encounter = {
+            ...encounter,
+            currentRound: encounter.currentRound + 1,
+        };
+        refresh();
+    };
+
+    export const nextParticipant = () => {
+        let nextParticipant = encounter.currentParticipant + 1;
+        if (nextParticipant === encounter.participants.length) {
+            nextParticipant = 0;
+            nextRound();
+        }
+        encounter = {
+            ...encounter,
+            currentParticipant: nextParticipant,
+        };
+        refresh();
+    };
+
+    export const resetRound = () => {
+        encounter = {
+            ...encounter,
+            currentRound: 0,
+            currentParticipant: 0,
+        };
+        refresh();
+    };
+
+    export const resolveNonNormalState = (participant: Participant) => {
+        const participantIndex = findIndex(encounter.participants, {name: participant.name});
+
+        const participantToWorkWith = encounter.participants[participantIndex];
+        const oldState = participantToWorkWith.state;
+        participantToWorkWith.state = States.normal;
+
+        encounter.participants.splice(participantIndex, 1);
+        const targetIndex =
+            participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
+        encounter.participants.splice(targetIndex, 0, participantToWorkWith);
+
+        if (oldState === States.delayed && participantIndex < encounter.currentParticipant) {
+            encounter.currentParticipant--;
+        } else if (oldState === States.readied && participantIndex > encounter.currentParticipant) {
+            encounter.currentParticipant++;
+        }
+
+        refresh();
+    };
 }
