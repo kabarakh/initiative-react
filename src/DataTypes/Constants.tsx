@@ -11,5 +11,6 @@ export enum ListTypes {
 
 export enum ParticipantTypes {
     player = 'player',
-    npc = 'npc',
+    monster = 'monster',
+    ally = 'ally'
 }

@@ -25,7 +25,7 @@ export namespace EncounterService {
         return encounter;
     };
 
-    export function refresh() {
+    export const refresh = () => {
         window.localStorage.setItem('encounter', JSON.stringify(encounter));
         encounterBehaviorSubject.next(encounter);
     }
@@ -52,7 +52,7 @@ export namespace EncounterService {
         refresh();
     };
 
-    export function updateParticipants(newParticipants: Participant[]) {
+    export const updateParticipants = (newParticipants: Participant[]) => {
         encounter = {
             ...encounter,
             participants: newParticipants,
@@ -61,7 +61,7 @@ export namespace EncounterService {
         refresh();
     }
 
-    export const addParticipant = (name: string, isPlayer: boolean): boolean => {
+    export const addParticipant = (name: string, type: ParticipantTypes): boolean => {
         const foundElements = find(encounter.participants, (participant: Participant) => {
             return name.toLowerCase() === participant.name.toLowerCase();
         });
@@ -74,7 +74,7 @@ export namespace EncounterService {
             name: name,
             initiative: 0,
             state: States.normal,
-            type: isPlayer ? ParticipantTypes.player : ParticipantTypes.npc,
+            type: type
         };
 
         const newEncounter = {...encounter};
