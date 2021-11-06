@@ -8,7 +8,7 @@ interface Props {
     setMessageText(message: string): void;
 }
 
-export function AddNewParticipant({setMessageText}: Props) {
+export const AddNewParticipant = ({setMessageText}: Props) => {
     const [name, setName] = useState('');
     const [className, setClassName] = useState('');
     const [type, setType] = useState(ParticipantTypes.monster);

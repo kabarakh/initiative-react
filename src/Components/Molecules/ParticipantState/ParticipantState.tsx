@@ -9,7 +9,7 @@ interface Props {
     currentParticipant: number;
 }
 
-export function ParticipantState({index, currentParticipant, participant}: Props) {
+export const ParticipantState = ({index, currentParticipant, participant}: Props) => {
     const markParticipant = (participantToChange: Participant, state: States) => {
         EncounterService.updateParticipant({
             ...participantToChange,

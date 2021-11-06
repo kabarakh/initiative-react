@@ -9,7 +9,7 @@ interface Props {
     onSaveInitiative(initiative: number): void;
 }
 
-export function Initiative({initiative, isSameWithSomeoneElse, onSaveInitiative}: Props) {
+export const Initiative = ({initiative, isSameWithSomeoneElse, onSaveInitiative}: Props) => {
     const [currentInitiative, setCurrentInitiative] = useState(initiative);
     const [editMode, setEditMode] = useState(false);
 

@@ -14,7 +14,7 @@ interface Props {
     participants: Participant[];
 }
 
-export function PrepareParticipantList({setMessageText, participants}: Props) {
+export const PrepareParticipantList = ({setMessageText, participants}: Props) => {
     let counts = countBy(participants, 'initiative');
 
     const isAnyInitiativeDouble = () => {

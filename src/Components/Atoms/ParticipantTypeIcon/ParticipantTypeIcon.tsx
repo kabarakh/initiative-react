@@ -6,7 +6,7 @@ interface Props {
     participantType: ParticipantTypes
 }
 
-export function ParticipantTypeIcon({participantType}: Props) {
+export const ParticipantTypeIcon = ({participantType}: Props) => {
 
     const getIconForType = () => {
         switch(participantType) {

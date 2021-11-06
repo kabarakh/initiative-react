@@ -16,7 +16,7 @@ interface Props {
     currentParticipant: number;
 }
 
-export function CombatParticipantList({participants, setMessageText, currentParticipant, currentRound}: Props) {
+export const CombatParticipantList = ({participants, setMessageText, currentParticipant, currentRound}: Props) => {
     const endEncounter = (): void => {
         let resetParticipants = filter(participants, {type: ParticipantTypes.player});
         resetParticipants = map(resetParticipants, (participant: Participant) => {
