@@ -1,25 +1,63 @@
 import {States} from '../../../DataTypes/Constants';
 import {Fragment} from 'react';
-import {Participant} from '../../../DataTypes/Interfaces';
-import {EncounterService} from '../../../Services/EncounterService';
+import {Encounter, Participant} from '../../../DataTypes/Interfaces';
+import {useRecoilState} from "recoil";
+import {encounterState} from "../../../States/States";
+import {findIndex, map} from "lodash";
 
 interface Props {
     index: number;
     participant: Participant;
     currentParticipant: number;
+
+    nextParticipant(newEncounterData: Encounter): void;
 }
 
-export const ParticipantState = ({index, currentParticipant, participant}: Props) => {
+export const ParticipantState = ({index, currentParticipant, participant, nextParticipant}: Props) => {
+    const [encounter, setEncounter] = useRecoilState(encounterState);
+
     const markParticipant = (participantToChange: Participant, state: States) => {
-        EncounterService.updateParticipant({
-            ...participantToChange,
-            state: state,
-        } as Participant);
-        EncounterService.nextParticipant();
+        const newParticipants = map(encounter.participants, (participant) => {
+            if (participant.name === participantToChange.name) {
+                return {
+                    ...participant,
+                    state: state
+                };
+            }
+            return participant;
+        });
+
+        nextParticipant({
+            ...encounter,
+            participants: newParticipants
+        });
     };
 
     const resolveNonNormalState = (participant: Participant) => {
-        EncounterService.resolveNonNormalState(participant);
+        const participantIndex = findIndex(encounter.participants, { name: participant.name });
+
+        let newParticipants = [...encounter.participants];
+
+        const participantToWorkWith = {...encounter.participants[participantIndex]};
+        const oldState = participantToWorkWith.state;
+        participantToWorkWith.state = States.normal;
+
+        newParticipants.splice(participantIndex, 1);
+        const targetIndex = participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
+        newParticipants.splice(targetIndex, 0, participantToWorkWith);
+
+        let newCurrentParticipant = encounter.currentParticipant;
+        if (oldState === States.delayed && participantIndex < encounter.currentParticipant) {
+            newCurrentParticipant = encounter.currentParticipant - 1;
+        } else if (oldState === States.readied && participantIndex > encounter.currentParticipant) {
+            newCurrentParticipant = encounter.currentParticipant + 1;
+        }
+
+        setEncounter({
+            ...encounter,
+            participants: newParticipants,
+            currentParticipant: newCurrentParticipant
+        })
     };
 
     return (

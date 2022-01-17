@@ -1,17 +1,19 @@
-import {FormEvent, useState} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlusSquare} from '@fortawesome/free-solid-svg-icons';
-import {EncounterService} from '../../../Services/EncounterService';
-import {ParticipantTypes} from "../../../DataTypes/Constants";
+import { FormEvent, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { ParticipantTypes, States } from '../../../DataTypes/Constants';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import { encounterState, messageTextState } from '../../../States/States';
+import { find } from 'lodash';
+import { Participant } from '../../../DataTypes/Interfaces';
 
-interface Props {
-    setMessageText(message: string): void;
-}
-
-export const AddNewParticipant = ({setMessageText}: Props) => {
+export const AddNewParticipant = () => {
     const [name, setName] = useState('');
     const [className, setClassName] = useState('');
     const [type, setType] = useState(ParticipantTypes.monster);
+    const setMessageText = useSetRecoilState(messageTextState);
+    const [encounter, setEncounter] = useRecoilState(encounterState);
+    const participants = encounter.participants;
 
     const updateName = (eventHandler: FormEvent<HTMLInputElement>) => {
         eventHandler.preventDefault();
@@ -20,12 +22,37 @@ export const AddNewParticipant = ({setMessageText}: Props) => {
         setName(eventHandler.currentTarget.value);
     };
 
+    const addParticipant = (name: string, type: ParticipantTypes) => {
+        const foundElements = find(encounter.participants, (participant: Participant) => {
+            return name.toLowerCase() === participant.name.toLowerCase();
+        });
+
+        if (typeof foundElements !== 'undefined') {
+            return false;
+        }
+
+        const newParticipant: Participant = {
+            name: name,
+            initiative: 0,
+            state: States.normal,
+            type: type,
+        };
+
+        const newEncounter = {
+            ...encounter,
+            participants: [...participants, newParticipant],
+        };
+
+        setEncounter(newEncounter);
+        return true;
+    };
+
     const submitHandler = (eventHandler: FormEvent<HTMLFormElement>) => {
         eventHandler.preventDefault();
         setClassName('');
 
         if (name !== '') {
-            const result = EncounterService.addParticipant(name, type);
+            const result = addParticipant(name, type);
             if (result === true) {
                 setName('');
             } else {
@@ -36,22 +63,22 @@ export const AddNewParticipant = ({setMessageText}: Props) => {
     };
 
     const updateType = (event: FormEvent<HTMLSelectElement>) => {
-        setType(event.currentTarget.value as ParticipantTypes)
-    }
+        setType(event.currentTarget.value as ParticipantTypes);
+    };
 
     return (
         <div className="add-participant my-3">
             <form onSubmit={submitHandler} className={className}>
-                <input className="outline-black mr-3" type="text" value={name} onInput={updateName}/>
+                <input className="outline-black mr-3" type="text" value={name} onInput={updateName} />
                 <select className="outline-black mr-3" value={type} onChange={updateType}>
                     <option value={ParticipantTypes.monster}>Monster</option>
                     <option value={ParticipantTypes.player}>Player</option>
                     <option value={ParticipantTypes.ally}>Ally</option>
                 </select>
                 <button type="submit">
-                    <FontAwesomeIcon icon={faPlusSquare}/>
+                    <FontAwesomeIcon icon={faPlusSquare} />
                 </button>
             </form>
         </div>
     );
-}
+};

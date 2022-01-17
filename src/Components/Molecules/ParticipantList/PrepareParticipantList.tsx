@@ -1,21 +1,20 @@
-import {Participant} from '../../../DataTypes/Interfaces';
-import {countBy, filter, map, orderBy, some} from 'lodash';
-import {Initiative} from '../Initiative/Initiative';
-import {AddNewParticipant} from '../AddNewParticipant/AddNewParticipant';
-import {ListTypes} from '../../../DataTypes/Constants';
-import {EncounterService} from '../../../Services/EncounterService';
-import {faPlayCircle, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {ParticipantTypeIcon} from "../../Atoms/ParticipantTypeIcon/ParticipantTypeIcon";
+import { Participant } from '../../../DataTypes/Interfaces';
+import { countBy, filter, map, orderBy, some } from 'lodash';
+import { Initiative } from '../Initiative/Initiative';
+import { AddNewParticipant } from '../AddNewParticipant/AddNewParticipant';
+import { ListTypes } from '../../../DataTypes/Constants';
+import { faPlayCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ParticipantTypeIcon } from '../../Atoms/ParticipantTypeIcon/ParticipantTypeIcon';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import { encounterState, messageTextState } from '../../../States/States';
 
-interface Props {
-    setMessageText(messageText: string): void;
+export const PrepareParticipantList = () => {
+    const setMessageText = useSetRecoilState(messageTextState);
+    const [encounter, setEncounter] = useRecoilState(encounterState);
+    const participants = encounter.participants;
 
-    participants: Participant[];
-}
-
-export const PrepareParticipantList = ({setMessageText, participants}: Props) => {
-    let counts = countBy(participants, 'initiative');
+    const counts = countBy(participants, 'initiative');
 
     const isAnyInitiativeDouble = () => {
         return some(counts, (counter: Number) => {
@@ -35,14 +34,18 @@ export const PrepareParticipantList = ({setMessageText, participants}: Props) =>
             setMessageText('Please set initiative for all participants');
             return;
         } else if (isAnyInitiativeDouble()) {
-            setMessageText('Please clean up double initative scores');
+            setMessageText('Please clean up double initiative scores');
             return;
         }
         const newParticipants = orderBy(participants, ['initiative'], ['desc']);
 
-        EncounterService.updateParticipants(newParticipants);
-        EncounterService.updateEncounterType(ListTypes.combat);
-        EncounterService.resetRound();
+        setEncounter({
+            ...encounter,
+            participants: newParticipants,
+            state: ListTypes.combat,
+            currentRound: 0,
+            currentParticipant: 0,
+        });
     };
 
     const deleteParticipant = (name: string) => {
@@ -52,7 +55,10 @@ export const PrepareParticipantList = ({setMessageText, participants}: Props) =>
             return participant.name !== name;
         });
 
-        EncounterService.updateParticipants(newParticipants);
+        setEncounter({
+            ...encounter,
+            participants: newParticipants,
+        });
     };
 
     const saveInitiative = (name: string, initiative: number) => {
@@ -60,12 +66,18 @@ export const PrepareParticipantList = ({setMessageText, participants}: Props) =>
 
         const newParticipants = map(participants, (participant: Participant) => {
             if (participant.name === name) {
-                participant.initiative = initiative;
+                return {
+                    ...participant,
+                    initiative: initiative,
+                };
             }
             return participant;
         });
 
-        EncounterService.updateParticipants(newParticipants);
+        setEncounter({
+            ...encounter,
+            participants: newParticipants,
+        });
     };
 
     return (
@@ -74,12 +86,14 @@ export const PrepareParticipantList = ({setMessageText, participants}: Props) =>
                 return (
                     <div className="flex participant align-items-baseline border-b-2 p-2" key={participant.name}>
                         <div className="w-1/12 participant-type">
-                            <ParticipantTypeIcon participantType={participant.type}/>
+                            <ParticipantTypeIcon participantType={participant.type} />
                         </div>
                         <div className="w-6/12 participant-name">{participant.name}</div>
                         <div className="w-4/12 participant-initiative">
                             <Initiative
-                                isSameWithSomeoneElse={participant.initiative !== 0 && counts[participant.initiative] > 1}
+                                isSameWithSomeoneElse={
+                                    participant.initiative !== 0 && counts[participant.initiative] > 1
+                                }
                                 initiative={participant.initiative}
                                 onSaveInitiative={(initiative: number) => {
                                     saveInitiative(participant.name, initiative);
@@ -88,17 +102,19 @@ export const PrepareParticipantList = ({setMessageText, participants}: Props) =>
                         </div>
                         <div className="w-1/12 participant-actions">
                             <button onClick={() => deleteParticipant(participant.name)}>
-                                <FontAwesomeIcon icon={faTrashAlt}/>
+                                <FontAwesomeIcon icon={faTrashAlt} />
                             </button>
                         </div>
                     </div>
                 );
             })}
-            <AddNewParticipant setMessageText={setMessageText}/>
-            <button className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5"
-                    onClick={startEncounter}>
-                Start <FontAwesomeIcon icon={faPlayCircle}/>
+            <AddNewParticipant />
+            <button
+                className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5"
+                onClick={startEncounter}
+            >
+                Start <FontAwesomeIcon icon={faPlayCircle} />
             </button>
         </div>
     );
-}
+};
