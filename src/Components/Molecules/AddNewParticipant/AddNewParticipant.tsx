@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { ParticipantTypes, States } from '../../../DataTypes/Constants';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { encounterState, messageTextState } from '../../../States/States';
 import { find } from 'lodash';
 import { Participant } from '../../../DataTypes/Interfaces';
@@ -69,8 +69,8 @@ export const AddNewParticipant = () => {
     return (
         <div className="add-participant my-3">
             <form onSubmit={submitHandler} className={className}>
-                <input className="outline-black mr-3" type="text" value={name} onInput={updateName} />
-                <select className="outline-black mr-3" value={type} onChange={updateType}>
+                <input className="me-3" type="text" value={name} onInput={updateName} />
+                <select className="me-3" value={type} onChange={updateType}>
                     <option value={ParticipantTypes.monster}>Monster</option>
                     <option value={ParticipantTypes.player}>Player</option>
                     <option value={ParticipantTypes.ally}>Ally</option>

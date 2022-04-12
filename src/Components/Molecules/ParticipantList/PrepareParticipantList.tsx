@@ -6,7 +6,7 @@ import { ListTypes } from '../../../DataTypes/Constants';
 import { faPlayCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ParticipantTypeIcon } from '../../Atoms/ParticipantTypeIcon/ParticipantTypeIcon';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { encounterState, messageTextState } from '../../../States/States';
 
 export const PrepareParticipantList = () => {
@@ -84,12 +84,12 @@ export const PrepareParticipantList = () => {
         <div className="participant-list">
             {participants.map((participant: Participant) => {
                 return (
-                    <div className="flex participant align-items-baseline border-b-2 p-2" key={participant.name}>
-                        <div className="w-1/12 participant-type">
+                    <div className="row participant align-items-baseline p-2" key={participant.name}>
+                        <div className="col-1 participant-type">
                             <ParticipantTypeIcon participantType={participant.type} />
                         </div>
-                        <div className="w-6/12 participant-name">{participant.name}</div>
-                        <div className="w-4/12 participant-initiative">
+                        <div className="col-6 participant-name">{participant.name}</div>
+                        <div className="col-4 participant-initiative">
                             <Initiative
                                 isSameWithSomeoneElse={
                                     participant.initiative !== 0 && counts[participant.initiative] > 1
@@ -100,7 +100,7 @@ export const PrepareParticipantList = () => {
                                 }}
                             />
                         </div>
-                        <div className="w-1/12 participant-actions">
+                        <div className="col-1 participant-actions">
                             <button onClick={() => deleteParticipant(participant.name)}>
                                 <FontAwesomeIcon icon={faTrashAlt} />
                             </button>
@@ -109,10 +109,7 @@ export const PrepareParticipantList = () => {
                 );
             })}
             <AddNewParticipant />
-            <button
-                className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5"
-                onClick={startEncounter}
-            >
+            <button className="py-1 px-2" onClick={startEncounter}>
                 Start <FontAwesomeIcon icon={faPlayCircle} />
             </button>
         </div>

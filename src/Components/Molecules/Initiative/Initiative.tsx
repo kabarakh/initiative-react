@@ -1,6 +1,6 @@
-import {FormEvent, Fragment, useState} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faMinusCircle, faPenSquare, faPlusCircle, faSave} from '@fortawesome/free-solid-svg-icons';
+import { FormEvent, Fragment, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinusCircle, faPenSquare, faPlusCircle, faSave } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     initiative: number;
@@ -9,7 +9,7 @@ interface Props {
     onSaveInitiative(initiative: number): void;
 }
 
-export const Initiative = ({initiative, isSameWithSomeoneElse, onSaveInitiative}: Props) => {
+export const Initiative = ({ initiative, isSameWithSomeoneElse, onSaveInitiative }: Props) => {
     const [currentInitiative, setCurrentInitiative] = useState(initiative);
     const [editMode, setEditMode] = useState(false);
 
@@ -38,49 +38,53 @@ export const Initiative = ({initiative, isSameWithSomeoneElse, onSaveInitiative}
         <div className="initiative">
             {editMode ? (
                 <form onSubmit={saveInitiative}>
-                    <input className="w-9/12 outline-black text-right mr-6" type="text" value={currentInitiative}
-                           onInput={updateInitiative}/>
-                    <span className="w-1/12">
-            <button type="submit">
-              <FontAwesomeIcon icon={faSave}/>
-            </button>
-            </span>
+                    <input
+                        className="col-9 text-end me-3"
+                        type="text"
+                        value={currentInitiative}
+                        onInput={updateInitiative}
+                    />
+                    <span className="col-1">
+                        <button type="submit">
+                            <FontAwesomeIcon icon={faSave} />
+                        </button>
+                    </span>
                 </form>
             ) : (
                 <div className={isSameWithSomeoneElse ? 'same-with-someone' : ''}>
-                    <span className="w-9/12 d-inline-block text-right mr-6">{currentInitiative}</span>
-                    <span className="w-1/12">
-          <button
-              className="mr-2"
-              onClick={() => {
-                  setEditMode(true);
-              }}
-          >
-            <FontAwesomeIcon icon={faPenSquare}/>
-          </button>
+                    <span className="col-9 d-inline-block text-end me-3">{currentInitiative}</span>
+                    <span className="col-1">
+                        <button
+                            className="me-2"
+                            onClick={() => {
+                                setEditMode(true);
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPenSquare} />
+                        </button>
                         {isSameWithSomeoneElse ? (
                             <Fragment>
                                 <button
-                                    className="mr-2"
+                                    className="me-2"
                                     onClick={() => {
                                         editForTiebreaker(1);
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faPlusCircle}/>
+                                    <FontAwesomeIcon icon={faPlusCircle} />
                                 </button>
                                 <button
-                                    className="mr-2"
+                                    className="me-2"
                                     onClick={() => {
                                         editForTiebreaker(-1);
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faMinusCircle}/>
+                                    <FontAwesomeIcon icon={faMinusCircle} />
                                 </button>
                             </Fragment>
                         ) : null}
-          </span>
+                    </span>
                 </div>
             )}
         </div>
     );
-}
+};

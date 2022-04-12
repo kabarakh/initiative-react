@@ -1,9 +1,9 @@
-import {States} from '../../../DataTypes/Constants';
-import {Fragment} from 'react';
-import {Encounter, Participant} from '../../../DataTypes/Interfaces';
-import {useRecoilState} from "recoil";
-import {encounterState} from "../../../States/States";
-import {findIndex, map} from "lodash";
+import { States } from '../../../DataTypes/Constants';
+import { Fragment } from 'react';
+import { Encounter, Participant } from '../../../DataTypes/Interfaces';
+import { useRecoilState } from 'recoil';
+import { encounterState } from '../../../States/States';
+import { findIndex, map } from 'lodash';
 
 interface Props {
     index: number;
@@ -13,7 +13,7 @@ interface Props {
     nextParticipant(newEncounterData: Encounter): void;
 }
 
-export const ParticipantState = ({index, currentParticipant, participant, nextParticipant}: Props) => {
+export const ParticipantState = ({ index, currentParticipant, participant, nextParticipant }: Props) => {
     const [encounter, setEncounter] = useRecoilState(encounterState);
 
     const markParticipant = (participantToChange: Participant, state: States) => {
@@ -21,7 +21,7 @@ export const ParticipantState = ({index, currentParticipant, participant, nextPa
             if (participant.name === participantToChange.name) {
                 return {
                     ...participant,
-                    state: state
+                    state: state,
                 };
             }
             return participant;
@@ -29,7 +29,7 @@ export const ParticipantState = ({index, currentParticipant, participant, nextPa
 
         nextParticipant({
             ...encounter,
-            participants: newParticipants
+            participants: newParticipants,
         });
     };
 
@@ -38,12 +38,15 @@ export const ParticipantState = ({index, currentParticipant, participant, nextPa
 
         let newParticipants = [...encounter.participants];
 
-        const participantToWorkWith = {...encounter.participants[participantIndex]};
+        const participantToWorkWith = { ...encounter.participants[participantIndex] };
         const oldState = participantToWorkWith.state;
         participantToWorkWith.state = States.normal;
 
         newParticipants.splice(participantIndex, 1);
-        const targetIndex = participantIndex > encounter.currentParticipant ? encounter.currentParticipant : encounter.currentParticipant - 1;
+        const targetIndex =
+            participantIndex > encounter.currentParticipant
+                ? encounter.currentParticipant
+                : encounter.currentParticipant - 1;
         newParticipants.splice(targetIndex, 0, participantToWorkWith);
 
         let newCurrentParticipant = encounter.currentParticipant;
@@ -56,33 +59,30 @@ export const ParticipantState = ({index, currentParticipant, participant, nextPa
         setEncounter({
             ...encounter,
             participants: newParticipants,
-            currentParticipant: newCurrentParticipant
-        })
+            currentParticipant: newCurrentParticipant,
+        });
     };
 
     return (
         <Fragment>
             {index === currentParticipant && participant.state === States.normal ? (
                 <Fragment>
-                    <button
-                        className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5 mr-2"
-                        onClick={() => markParticipant(participant, States.readied)}>Ready
+                    <button className="px-2 me-2" onClick={() => markParticipant(participant, States.readied)}>
+                        Ready
                     </button>
-                    <button
-                        className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5"
-                        onClick={() => markParticipant(participant, States.delayed)}>Delay
+                    <button className="px-2" onClick={() => markParticipant(participant, States.delayed)}>
+                        Delay
                     </button>
                 </Fragment>
             ) : null}
             {index !== currentParticipant && participant.state !== States.normal ? (
                 <Fragment>
                     {participant.state}
-                    <button
-                        className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5 ml-2"
-                        onClick={() => resolveNonNormalState(participant)}>Resolve state
+                    <button className="px-2 ms-2" onClick={() => resolveNonNormalState(participant)}>
+                        Resolve state
                     </button>
                 </Fragment>
             ) : null}
         </Fragment>
     );
-}
+};

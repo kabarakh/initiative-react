@@ -1,6 +1,6 @@
-import {Encounter} from "../DataTypes/Interfaces";
-import {ListTypes} from "../DataTypes/Constants";
-import {atom} from "recoil";
+import { Encounter } from '../DataTypes/Interfaces';
+import { ListTypes } from '../DataTypes/Constants';
+import { atom } from 'recoil';
 
 const defaultEncounter: Encounter = {
     participants: [],
@@ -9,17 +9,18 @@ const defaultEncounter: Encounter = {
     currentRound: 0,
 };
 
-const localStorageEffect = (key: string) => ({setSelf, onSet}: any) => {
-    const savedValue = localStorage.getItem(key)
-    if (savedValue !== null) {
-        setSelf(JSON.parse(savedValue));
-    }
+const localStorageEffect =
+    (key: string) =>
+    ({ setSelf, onSet }: any) => {
+        const savedValue = localStorage.getItem(key);
+        if (savedValue !== null) {
+            setSelf(JSON.parse(savedValue));
+        }
 
-    onSet((newValue: Encounter) => {
-        console.log('saving', newValue);
-        localStorage.setItem(key, JSON.stringify(newValue));
-    });
-};
+        onSet((newValue: Encounter) => {
+            localStorage.setItem(key, JSON.stringify(newValue));
+        });
+    };
 
 export const messageTextState = atom({
     key: 'messageText', // unique ID (with respect to other atoms/selectors)
@@ -29,7 +30,5 @@ export const messageTextState = atom({
 export const encounterState = atom({
     key: 'encounter', // unique ID (with respect to other atoms/selectors)
     default: defaultEncounter, // default value (aka initial value),
-    effects: [
-        localStorageEffect('encounter'),
-    ]
+    effects: [localStorageEffect('encounter')],
 });

@@ -1,4 +1,4 @@
-import {Encounter, Participant} from '../../../DataTypes/Interfaces';
+import { Encounter, Participant } from '../../../DataTypes/Interfaces';
 import { filter, map } from 'lodash';
 import { ListTypes, ParticipantTypes, States } from '../../../DataTypes/Constants';
 import { faAngleDoubleRight, faHandPointRight, faStopCircle } from '@fortawesome/free-solid-svg-icons';
@@ -40,11 +40,11 @@ export const CombatParticipantList = () => {
 
     const nextParticipantHandler = () => {
         nextParticipant();
-    }
+    };
 
     const nextParticipant = (newEncounterData?: Encounter) => {
         if (!newEncounterData) {
-            newEncounterData = {...encounter};
+            newEncounterData = { ...encounter };
         }
         let round = newEncounterData.currentRound;
         let nextParticipant = newEncounterData.currentParticipant + 1;
@@ -69,10 +69,7 @@ export const CombatParticipantList = () => {
                 {currentRound === 0 ? (
                     <Fragment>
                         Surprise round
-                        <button
-                            className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5 ml-2"
-                            onClick={nextRound}
-                        >
+                        <button className="py-1 px-2 ms-2" onClick={nextRound}>
                             Skip
                         </button>
                     </Fragment>
@@ -83,22 +80,22 @@ export const CombatParticipantList = () => {
             {participants.map((participant: Participant, index: number) => {
                 return (
                     <div
-                        className={`flex align-items-baseline participant border-b-2 p-2 ${participant.state}`}
+                        className={`row align-items-baseline participant p-2 ${participant.state}`}
                         key={participant.name}
                     >
-                        <div className="participant-type w-1/12">
+                        <div className="participant-type col-1">
                             <ParticipantTypeIcon participantType={participant.type} />
                         </div>
-                        <div className="w-6/12 participant-name">
+                        <div className="col-6 participant-name">
                             {index === currentParticipant ? (
-                                <FontAwesomeIcon className="mr-2" icon={faHandPointRight} />
+                                <FontAwesomeIcon className="me-2" icon={faHandPointRight} />
                             ) : (
                                 ''
                             )}
                             {participant.name}
                         </div>
-                        <div className="w-3/12 participant-initiative">{participant.initiative}</div>
-                        <div className="w-2/12 participant-actions">
+                        <div className="col-3 participant-initiative">{participant.initiative}</div>
+                        <div className="col-2 participant-actions">
                             <ParticipantState
                                 nextParticipant={nextParticipant}
                                 index={index}
@@ -110,10 +107,7 @@ export const CombatParticipantList = () => {
                 );
             })}
             <div className="my-3">
-                <button
-                    className="border-gray-600 border-1 bg-gradient-to-br from-gray-50 to-gray-200 py-0.5 px-1.5"
-                    onClick={endEncounter}
-                >
+                <button className="py-1 px-2" onClick={endEncounter}>
                     End <FontAwesomeIcon icon={faStopCircle} />
                 </button>
             </div>
