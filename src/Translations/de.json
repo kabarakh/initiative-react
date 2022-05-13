@@ -1,0 +1,6 @@
+{
+  "errors.duplicateName": "Doppelter Name (${name})",
+  "labels.ally": "Verbündeter",
+  "labels.player": "Spieler",
+  "labels.monster": "Monster"
+}

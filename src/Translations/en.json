@@ -1,0 +1,6 @@
+{
+  "errors.duplicateName": "Duplicate name (${name})",
+  "labels.ally": "Ally",
+  "labels.player": "Player",
+  "labels.monster": "Monster"
+}

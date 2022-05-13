@@ -32,3 +32,8 @@ export const encounterState = atom({
     default: defaultEncounter, // default value (aka initial value),
     effects: [localStorageEffect('encounter')],
 });
+
+export const currentLanguageState = atom({
+    key: 'currentLanguage',
+    default: 'de',
+});

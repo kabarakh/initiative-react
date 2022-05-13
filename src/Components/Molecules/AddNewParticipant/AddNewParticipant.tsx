@@ -6,6 +6,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { encounterState, messageTextState } from '../../../States/States';
 import { find } from 'lodash';
 import { Participant } from '../../../DataTypes/Interfaces';
+import { Translation } from '../../Atoms/Translation/Translation';
 
 export const AddNewParticipant = () => {
     const [name, setName] = useState('');
@@ -63,6 +64,7 @@ export const AddNewParticipant = () => {
     };
 
     const updateType = (event: FormEvent<HTMLSelectElement>) => {
+        console.log(<Translation key={'label.monster'} />);
         setType(event.currentTarget.value as ParticipantTypes);
     };
 
@@ -71,9 +73,15 @@ export const AddNewParticipant = () => {
             <form onSubmit={submitHandler} className={className}>
                 <input className="me-3" type="text" value={name} onInput={updateName} />
                 <select className="me-3" value={type} onChange={updateType}>
-                    <option value={ParticipantTypes.monster}>Monster</option>
-                    <option value={ParticipantTypes.player}>Player</option>
-                    <option value={ParticipantTypes.ally}>Ally</option>
+                    <option value={ParticipantTypes.monster}>
+                        <Translation key={'label.monster'} />
+                    </option>
+                    <option value={ParticipantTypes.player}>
+                        <Translation key={'label.player'} />
+                    </option>
+                    <option value={ParticipantTypes.ally}>
+                        <Translation key={'label.ally'} />
+                    </option>
                 </select>
                 <button type="submit">
                     <FontAwesomeIcon icon={faPlusSquare} />
