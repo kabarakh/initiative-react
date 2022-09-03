@@ -2,6 +2,7 @@
   "name": "initiative-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kabarakh.github.io/initiative-react/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -24,6 +25,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-fontawesome": "^1.6.5",
     "autoprefixer": "^9.8.8",
+    "gh-pages": "^4.0.0",
     "npm-force-resolutions": "^0.0.10",
     "postcss": "^7.0.39",
     "prettier": "^2.4.1",
@@ -36,7 +38,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
